@@ -35,11 +35,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov flake8 black
 
-      - name: Format code with Black
-        run: |
-          source venv/bin/activate
-          black app tests
-
       - name: Run code linting
         run: |
           source venv/bin/activate
