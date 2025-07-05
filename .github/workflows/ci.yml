@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.11'
 
       - name: Set up cache for pip
         uses: actions/cache@v4
@@ -33,22 +33,27 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov flake8
+          pip install pytest pytest-cov flake8 black
+
+      - name: Format code with Black
+        run: |
+          source venv/bin/activate
+          black app tests
 
       - name: Run code linting
         run: |
           source venv/bin/activate
           flake8 app tests
 
+      - name: Train model (Prefect flow)
+        run: |
+          source venv/bin/activate
+          python app/etl/train_flow.py
+
       - name: Run unit tests with coverage
         run: |
           source venv/bin/activate
           pytest --cov=app --cov-report=xml
-
-      - name: Run Prefect train_flow
-        run: |
-          source venv/bin/activate
-          python app/etl/train_flow.py
 
       - name: Check if model file exists
         run: |
