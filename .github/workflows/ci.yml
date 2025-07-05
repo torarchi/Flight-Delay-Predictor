@@ -1,0 +1,61 @@
+name: Flight Delay Predictor CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Set up cache for pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov flake8
+
+      - name: Run code linting
+        run: |
+          source venv/bin/activate
+          flake8 app tests
+
+      - name: Run unit tests with coverage
+        run: |
+          source venv/bin/activate
+          pytest --cov=app --cov-report=xml
+
+      - name: Run Prefect train_flow
+        run: |
+          source venv/bin/activate
+          python app/etl/train_flow.py
+
+      - name: Check if model file exists
+        run: |
+          test -f models/lgbm_model.pkl
+
+      - name: Upload trained model as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lgbm_model
+          path: models/lgbm_model.pkl

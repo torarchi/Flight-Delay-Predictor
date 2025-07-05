@@ -1,0 +1,28 @@
+# Core
+pandas
+numpy
+scikit-learn
+lightgbm
+xgboost
+joblib
+kagglehub
+
+# Ingestion
+requests
+
+# Tracking
+mlflow
+
+# Web API
+fastapi
+uvicorn
+
+# Workflow & Monitoring
+prefect
+evidently
+
+# Dev & infra
+python-dotenv
+
+#tests
+pytest
