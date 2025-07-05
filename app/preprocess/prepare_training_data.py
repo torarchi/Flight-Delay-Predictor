@@ -5,6 +5,7 @@ RAW_DIR = Path("data/raw")
 PROCESSED_DIR = Path("data/processed")
 PROCESSED_FILE = PROCESSED_DIR / "flights_prepared.csv"
 
+
 def preprocess_flights():
     df = pd.read_csv(RAW_DIR / "flights.csv", low_memory=False)
 
@@ -12,10 +13,17 @@ def preprocess_flights():
     df["arr_delayed"] = df["ARRIVAL_DELAY"] > 15
 
     cols = [
-        "MONTH", "DAY", "DAY_OF_WEEK", "AIRLINE",
-        "ORIGIN_AIRPORT", "DESTINATION_AIRPORT",
-        "SCHEDULED_DEPARTURE", "DISTANCE", "SCHEDULED_TIME",
-        "ARRIVAL_DELAY", "arr_delayed"
+        "MONTH",
+        "DAY",
+        "DAY_OF_WEEK",
+        "AIRLINE",
+        "ORIGIN_AIRPORT",
+        "DESTINATION_AIRPORT",
+        "SCHEDULED_DEPARTURE",
+        "DISTANCE",
+        "SCHEDULED_TIME",
+        "ARRIVAL_DELAY",
+        "arr_delayed",
     ]
     df = df[cols]
 
@@ -30,6 +38,7 @@ def preprocess_flights():
 
     print(f"Предобработка завершена: {len(df):,} строк")
     print(f"Сохранено в {PROCESSED_FILE}")
+
 
 if __name__ == "__main__":
     preprocess_flights()

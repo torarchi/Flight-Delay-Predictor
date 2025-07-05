@@ -11,6 +11,7 @@ sys.path.append(BASE_DIR)
 DATA_FILE = os.path.join(BASE_DIR, "data", "processed", "flights_prepared.csv")
 MODEL_FILE = os.path.join(BASE_DIR, "models", "lgbm_model.pkl")
 
+
 @task
 def load_data():
     df = pd.read_csv(DATA_FILE)
@@ -22,10 +23,20 @@ def preprocess(df):
     df = df.dropna(subset=["ARRIVAL_DELAY"])
     df["IS_DELAYED"] = (df["ARRIVAL_DELAY"] > 15).astype(int)
 
-    X = df.loc[:, ["AIRLINE", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT",
-                   "SCHEDULED_DEPARTURE", "SCHEDULED_TIME", "DISTANCE",
-                   "MONTH", "DAY", "DAY_OF_WEEK"]].copy()
-
+    X = df.loc[
+        :,
+        [
+            "AIRLINE",
+            "ORIGIN_AIRPORT",
+            "DESTINATION_AIRPORT",
+            "SCHEDULED_DEPARTURE",
+            "SCHEDULED_TIME",
+            "DISTANCE",
+            "MONTH",
+            "DAY",
+            "DAY_OF_WEEK",
+        ],
+    ].copy()
 
     y = df["IS_DELAYED"]
 

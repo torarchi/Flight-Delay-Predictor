@@ -26,3 +26,6 @@ python-dotenv
 
 #tests
 pytest
+
+# code formatting pep8
+black

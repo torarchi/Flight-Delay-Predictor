@@ -14,6 +14,7 @@ model = joblib.load(MODEL_PATH)
 
 CATEGORICAL = ["AIRLINE", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT"]
 
+
 class FlightInput(BaseModel):
     MONTH: int
     DAY: int
@@ -25,9 +26,10 @@ class FlightInput(BaseModel):
     DISTANCE: float
     SCHEDULED_TIME: float
 
+
 @app.post("/predict")
 def predict_delay(flight: FlightInput):
-    data = flight.model_dump() 
+    data = flight.model_dump()
     df = pd.DataFrame([data])
 
     for col in CATEGORICAL:
@@ -36,11 +38,10 @@ def predict_delay(flight: FlightInput):
     prob = model.predict_proba(df)[0][1]
     prediction = model.predict(df)[0]
 
-    return {
-        "delay_probability": round(prob, 4),
-        "will_be_delayed": bool(prediction)
-    }
+    return {"delay_probability": round(prob, 4), "will_be_delayed": bool(prediction)}
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("serve.app:app", host="127.0.0.1", port=8000, reload=True)
