@@ -19,30 +19,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Set up cache for pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Create and activate virtualenv
+      - name: Create and activate virtualenv + install deps
         run: |
           python -m venv venv
-          source venv/bin/activate
-
-      - name: Install dependencies
-        run: |
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install kaggle pytest pytest-cov flake8 black
 
-      - name: Configure Kaggle API and download dataset
+      - name: Download dataset from Kaggle
         env:
           KAGGLE_JSON: ${{ secrets.KAGGLE_JSON }}
         run: |
+          source venv/bin/activate
           mkdir -p ~/.kaggle
           echo "$KAGGLE_JSON" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
