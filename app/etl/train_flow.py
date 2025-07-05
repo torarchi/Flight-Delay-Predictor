@@ -66,6 +66,7 @@ def evaluate_model(model, X, y):
 
 @task
 def save_model(model):
+    os.makedirs(os.path.dirname(MODEL_FILE), exist_ok=True)
     joblib.dump(model, MODEL_FILE)
     print(f"Модель сохранена: {MODEL_FILE}")
 
