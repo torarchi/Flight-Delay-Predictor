@@ -2,7 +2,6 @@ import pandas as pd
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_auc_score
-from pathlib import Path
 import joblib
 import mlflow
 import mlflow.lightgbm
@@ -45,8 +44,16 @@ def train_model():
         )
 
         # Обучение
-        model = lgb.LGBMClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
-        model.fit(X_train, y_train, categorical_feature=categorical)
+        model = lgb.LGBMClassifier(
+            n_estimators=100, 
+            learning_rate=0.1, 
+            random_state=42
+        )
+        model.fit(
+            X_train, 
+            y_train, 
+            categorical_feature=categorical
+        )
 
         # Предсказание
         y_pred = model.predict(X_test)

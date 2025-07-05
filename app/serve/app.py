@@ -38,10 +38,11 @@ def predict_delay(flight: FlightInput):
     prob = model.predict_proba(df)[0][1]
     prediction = model.predict(df)[0]
 
-    return {"delay_probability": round(prob, 4), "will_be_delayed": bool(prediction)}
+    return {
+        "delay_probability": round(prob, 4), 
+        "will_be_delayed": bool(prediction)
+    }
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run("serve.app:app", host="127.0.0.1", port=8000, reload=True)
