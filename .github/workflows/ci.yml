@@ -27,13 +27,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install dependencies
+      - name: Create and activate virtualenv
         run: |
           python -m venv venv
           source venv/bin/activate
+
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov flake8 black
+          pip install kaggle pytest pytest-cov flake8 black
+
+      - name: Configure Kaggle API and download dataset
+        env:
+          KAGGLE_JSON: ${{ secrets.KAGGLE_JSON }}
+        run: |
+          mkdir -p ~/.kaggle
+          echo "$KAGGLE_JSON" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+          kaggle datasets download -d usdot/flight-delays -p data/raw --unzip
+          ls -la data/raw
+
+      - name: Prepare processed data
+        run: |
+          source venv/bin/activate
+          python app/preprocess/prepare_training_data.py
+
+      - name: Format code with Black
+        run: |
+          source venv/bin/activate
+          black app tests
 
       - name: Run code linting
         run: |
