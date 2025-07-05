@@ -39,7 +39,7 @@ def predict_delay(flight: FlightInput):
     prediction = model.predict(df)[0]
 
     return {
-        "delay_probability": round(prob, 4), 
+        "delay_probability": round(prob, 4),
         "will_be_delayed": bool(prediction)
     }
 

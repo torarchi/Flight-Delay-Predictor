@@ -45,13 +45,13 @@ def train_model():
 
         # Обучение
         model = lgb.LGBMClassifier(
-            n_estimators=100, 
-            learning_rate=0.1, 
+            n_estimators=100,
+            learning_rate=0.1,
             random_state=42
         )
         model.fit(
-            X_train, 
-            y_train, 
+            X_train,
+            y_train,
             categorical_feature=categorical
         )
 
