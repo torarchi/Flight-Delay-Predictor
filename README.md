@@ -9,6 +9,33 @@ https://www.kaggle.com/datasets/usdot/flight-delays?resource=download
 
 ---
 
+Залил на render.com. Можно протестировать api
+
+https://flight-delay-predictor-mvhf.onrender.com/docs
+
+Пример запроса:
+
+```
+{
+  "MONTH": 7,
+  "DAY": 15,
+  "DAY_OF_WEEK": 1,
+  "AIRLINE": "AA",
+  "ORIGIN_AIRPORT": "JFK",
+  "DESTINATION_AIRPORT": "LAX",
+  "SCHEDULED_DEPARTURE": 830,
+  "DISTANCE": 2475,
+  "SCHEDULED_TIME": 360.0
+}
+```
+
+пример ответа:
+
+{
+  "delay_probability": 0.1662,
+  "will_be_delayed": false
+}
+
 ## Стек
 
 - Python 3.13  
