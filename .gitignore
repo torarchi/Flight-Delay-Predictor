@@ -30,7 +30,6 @@ Thumbs.db
 .vscode/
 
 # Model artifacts
-models/
 mlruns/
 mlflow.db
 
