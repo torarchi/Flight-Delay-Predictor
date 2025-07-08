@@ -1,10 +1,10 @@
 # Flight Delay Predictor
 
-**Flight Delay Predictor** 
-  FastAPI-сервис с ML-моделью для прогнозирования вероятности задержки авиарейса. В основе лежит LightGBM, модель обучена на признаках рейса, включая авиакомпанию, аэропорты, время вылета и дистанцию. 
+  FastAPI-сервис с ML-моделью для прогнозирования вероятности задержки авиарейса. 
+  В основе лежит LightGBM, модель обучена на признаках рейса, включая авиакомпанию, аэропорты, время вылета и дистанцию. 
   
   
-## Данные взял с kaggle - 
+Данные взял с kaggle - 
 https://www.kaggle.com/datasets/usdot/flight-delays?resource=download
 
 ---
@@ -12,13 +12,13 @@ https://www.kaggle.com/datasets/usdot/flight-delays?resource=download
 ## Стек
 
 - Python 3.13  
-- **ML**: LightGBM, scikit-learn  
-- **Data**: pandas, joblib, kaggle  
-- **API**: FastAPI  
-- **Оркестрация**: Prefect  
-- **Тестирование**: pytest  
-- **Отслеживание**: MLflow  
-- **DevTools**: Pydantic v2, uvicorn
+- ML: LightGBM, scikit-learn  
+- Data: pandas, joblib, kaggle  
+- API: FastAPI  
+- Оркестрация: Prefect  
+- Тестирование: pytest  
+- Отслеживание: MLflow  
+- DevTools: Pydantic v2, uvicorn
 
 
 ---
