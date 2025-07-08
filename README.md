@@ -9,7 +9,7 @@ https://www.kaggle.com/datasets/usdot/flight-delays?resource=download
 
 ---
 
-Залил на render.com. Можно протестировать api
+Залил на render.com. Бесплатная версия. Иногда отключается.
 
 https://flight-delay-predictor-mvhf.onrender.com/docs
 
