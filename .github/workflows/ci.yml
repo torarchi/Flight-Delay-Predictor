@@ -40,18 +40,17 @@ jobs:
 
       - name: Prepare processed data
         run: |
-          PYTHONPATH=./src venv/bin/python -m data.prepare
+          venv/bin/python -m src.data.prepare
 
       - name: Train model via main.py (Prefect pipeline)
         run: |
-          PYTHONPATH=./src venv/bin/python main.py
+          venv/bin/python main.py
 
       - name: Run unit tests with coverage
         env:
           PYTHONPATH: ./src
         run: |
-          source venv/bin/activate
-          pytest --cov=src --cov-report=xml
+          venv/bin/pytest --cov=src --cov-report=xml
 
       - name: Check if model file exists
         run: |
