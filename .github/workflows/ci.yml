@@ -17,21 +17,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
-      - name: Create and activate virtualenv + install deps
+      - name: Create and activate virtualenv + install dependencies
         run: |
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install kaggle pytest pytest-cov flake8 black
+          pip install kaggle pytest pytest-cov flake8 black mlflow
 
       - name: Download dataset from Kaggle
         env:
           KAGGLE_JSON: ${{ secrets.KAGGLE_JSON }}
         run: |
-          source venv/bin/activate
           mkdir -p ~/.kaggle
           echo "$KAGGLE_JSON" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
@@ -41,22 +40,19 @@ jobs:
       - name: Prepare processed data
         run: |
           source venv/bin/activate
-          python app/preprocess/prepare_training_data.py
+          python -m src.data.prepare
 
-      - name: Run code linting
+      - name: Train model via main.py (Prefect pipeline)
         run: |
           source venv/bin/activate
-          flake8 app tests
-
-      - name: Train model (Prefect flow)
-        run: |
-          source venv/bin/activate
-          python app/etl/train_flow.py
+          python main.py
 
       - name: Run unit tests with coverage
+        env:
+          PYTHONPATH: ./src
         run: |
           source venv/bin/activate
-          pytest --cov=app --cov-report=xml
+          pytest --cov=src --cov-report=xml
 
       - name: Check if model file exists
         run: |
