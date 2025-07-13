@@ -48,3 +48,6 @@ def train_lgbm_model() -> lgb.LGBMClassifier:
         logger.info(f"ROC AUC:  {auc:.4f}")
 
     return model
+
+if __name__ == "__main__":
+    train_lgbm_model()

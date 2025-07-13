@@ -29,6 +29,5 @@ def prepare_flights_data() -> pd.DataFrame:
     
     return df
 
-
 if __name__ == "__main__":
     prepare_flights_data()
