@@ -40,13 +40,11 @@ jobs:
 
       - name: Prepare processed data
         run: |
-          source venv/bin/activate
-          python -m src.data.prepare
+          PYTHONPATH=./src venv/bin/python -m data.prepare
 
       - name: Train model via main.py (Prefect pipeline)
         run: |
-          source venv/bin/activate
-          python main.py
+          PYTHONPATH=./src venv/bin/python main.py
 
       - name: Run unit tests with coverage
         env:
