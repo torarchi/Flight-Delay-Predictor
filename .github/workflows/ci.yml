@@ -31,6 +31,7 @@ jobs:
         env:
           KAGGLE_JSON: ${{ secrets.KAGGLE_JSON }}
         run: |
+          source venv/bin/activate
           mkdir -p ~/.kaggle
           echo "$KAGGLE_JSON" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
