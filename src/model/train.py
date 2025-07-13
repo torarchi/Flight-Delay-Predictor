@@ -6,34 +6,41 @@ import mlflow
 import mlflow.lightgbm
 
 from src.config.paths import PROCESSED_FILE, MLRUNS_DIR
-from src.data.preprocess import CATEGORICAL_FEATURES
+from src.config.config import config
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 def train_lgbm_model() -> lgb.LGBMClassifier:
     mlflow.set_tracking_uri(MLRUNS_DIR.as_uri())
-    mlflow.set_experiment("flight_delay_prediction")
+    mlflow.set_experiment(config.mlflow.experiment_name)
 
     df = pd.read_csv(PROCESSED_FILE)
     y = df["arr_delayed"]
     X = df.drop(columns=["ARRIVAL_DELAY", "arr_delayed"])
 
-    for col in CATEGORICAL_FEATURES:
-        X[col] = X[col].astype("category")
+    for col in config.data.categorical_features:
+        if col in X.columns:
+            X[col] = X[col].astype("category")
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, 
+        test_size=config.data.test_size, 
+        random_state=config.data.random_state
+    )
 
-    model = lgb.LGBMClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
+    model = lgb.LGBMClassifier(**config.model.params)
 
-    with mlflow.start_run():
-        mlflow.log_params({
-            "n_estimators": 100,
-            "learning_rate": 0.1,
-            "random_state": 42,
-        })
-
-        model.fit(X_train, y_train, categorical_feature=CATEGORICAL_FEATURES)
+    with mlflow.start_run(run_name=config.mlflow.run_name):
+        mlflow.log_params(config.model.params)
+        mlflow.log_param("delay_threshold", config.data.delay_threshold)
+        mlflow.log_param("test_size", config.data.test_size)
+        
+        model.fit(
+            X_train, y_train, 
+            categorical_feature=config.data.categorical_features
+        )
+        
         y_pred = model.predict(X_test)
         y_prob = model.predict_proba(X_test)[:, 1]
 
@@ -42,10 +49,15 @@ def train_lgbm_model() -> lgb.LGBMClassifier:
 
         mlflow.log_metric("accuracy", acc)
         mlflow.log_metric("roc_auc", auc)
+        mlflow.log_metric("train_samples", len(X_train))
+        mlflow.log_metric("test_samples", len(X_test))
+        
         mlflow.lightgbm.log_model(model, "model")
 
-        logger.info(f"Accuracy: {acc:.4f}")
-        logger.info(f"ROC AUC:  {auc:.4f}")
+        logger.info(f"Модель обучена: {config.model.type}")
+        logger.info(f"Точность: {acc:.4f}")
+        logger.info(f"ROC AUC: {auc:.4f}")
+        logger.info(f"Параметры: {config.model.params}")
 
     return model
 

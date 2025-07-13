@@ -7,6 +7,9 @@ xgboost
 joblib
 kagglehub
 
+# Configuration
+pyyaml
+
 # Ingestion
 requests
 

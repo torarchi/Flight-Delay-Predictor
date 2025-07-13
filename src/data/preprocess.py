@@ -1,20 +1,19 @@
 import pandas as pd
-
-CATEGORICAL_FEATURES = ["AIRLINE", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT"]
-FEATURE_COLUMNS = [
-    "AIRLINE", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT",
-    "SCHEDULED_DEPARTURE", "SCHEDULED_TIME", "DISTANCE",
-    "MONTH", "DAY", "DAY_OF_WEEK"
-]
+from src.config.config import config
 
 def preprocess_flights(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     df = df.dropna(subset=["ARRIVAL_DELAY"])
-    df["IS_DELAYED"] = (df["ARRIVAL_DELAY"] > 15).astype(int)
+    
+    df["IS_DELAYED"] = (df["ARRIVAL_DELAY"] > config.data.delay_threshold).astype(int)
 
-    X = df[FEATURE_COLUMNS].copy()
+    X = df[config.data.feature_columns].copy()
     y = df["IS_DELAYED"]
 
-    for col in CATEGORICAL_FEATURES:
-        X[col] = X[col].astype("category")
+    for col in config.data.categorical_features:
+        if col in X.columns:
+            X[col] = X[col].astype("category")
 
     return X, y
+
+CATEGORICAL_FEATURES = config.data.categorical_features
+FEATURE_COLUMNS = config.data.feature_columns

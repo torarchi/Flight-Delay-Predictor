@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 from src.serve.api import app
+from src.config.config import config
 
 client = TestClient(app)
 
@@ -15,12 +16,39 @@ valid_payload = {
     "DAY_OF_WEEK": 3,
 }
 
+def test_root():
+    response = client.get("/")
+    assert response.status_code == 200
+    data = response.json()
+    assert "message" in data
+    assert "version" in data
+    assert data["delay_threshold"] == config.data.delay_threshold
+
+def test_config_endpoint():
+    response = client.get("/config")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["model_type"] == config.model.type
+    assert data["delay_threshold"] == config.data.delay_threshold
+    assert "features" in data
+    assert "categorical_features" in data
+
+def test_health_check():
+    response = client.get("/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert "status" in data
+    assert "model_loaded" in data
+
 def test_predict_success():
     response = client.post("/predict", json=valid_payload)
     assert response.status_code == 200
     data = response.json()
     assert "delay_probability" in data
     assert "will_be_delayed" in data
+    assert "threshold_minutes" in data
+    assert "model_type" in data
+    assert data["threshold_minutes"] == config.data.delay_threshold
 
 def test_missing_fields():
     response = client.post("/predict", json={"AIRLINE": "AA"})

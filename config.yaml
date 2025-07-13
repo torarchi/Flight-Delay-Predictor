@@ -1,0 +1,62 @@
+model:
+  type: "lightgbm"
+  params:
+    n_estimators: 100
+    learning_rate: 0.1
+    random_state: 42
+    max_depth: -1
+    num_leaves: 31
+    min_child_samples: 20
+    subsample: 0.8
+    colsample_bytree: 0.8
+
+data:
+  delay_threshold: 15  # минуты для определения задержки
+  test_size: 0.2
+  random_state: 42
+  
+  # Признаки модели
+  categorical_features:
+    - "AIRLINE"
+    - "ORIGIN_AIRPORT"
+    - "DESTINATION_AIRPORT"
+  
+  feature_columns:
+    - "AIRLINE"
+    - "ORIGIN_AIRPORT"
+    - "DESTINATION_AIRPORT"
+    - "SCHEDULED_DEPARTURE"
+    - "SCHEDULED_TIME"
+    - "DISTANCE"
+    - "MONTH"
+    - "DAY"
+    - "DAY_OF_WEEK"
+  
+  # Колонки для обработки
+  selected_columns:
+    - "MONTH"
+    - "DAY"
+    - "DAY_OF_WEEK"
+    - "AIRLINE"
+    - "ORIGIN_AIRPORT"
+    - "DESTINATION_AIRPORT"
+    - "SCHEDULED_DEPARTURE"
+    - "DISTANCE"
+    - "SCHEDULED_TIME"
+    - "ARRIVAL_DELAY"
+    - "arr_delayed"
+
+mlflow:
+  experiment_name: "flight_delay_prediction"
+  run_name: "lgbm_baseline"
+
+api:
+  title: "Flight Delay Predictor"
+  description: "ML service for predicting flight delays"
+  version: "1.0.0"
+  host: "127.0.0.1"
+  port: 8000
+
+logging:
+  level: "INFO"
+  format: "[%(asctime)s] %(levelname)s - %(message)s"
